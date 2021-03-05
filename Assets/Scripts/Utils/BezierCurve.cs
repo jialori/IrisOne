@@ -1,4 +1,5 @@
 using UnityEngine;
+using System; //Array
 using System.Collections.Generic;
 
 // Copyright:
@@ -22,11 +23,12 @@ public class BezierSpline
             Vector2[] lst = new Vector2[4] {a, b, c, d};
             Vector2[] curve = BezierSpline.CubicCurve(lst);
 
-            for (int j = 0; j < curve.Length; j++)
+            for (int j = 0; j < curve.Length-1; j++)
             {
                 spline.Add(curve[j]);
             }
         }
+        spline.Add(controlPoints[controlPoints.Count-1]);
         return spline;
     } 
 
@@ -50,11 +52,12 @@ public class BezierSpline
             Vector2[] lst = new Vector2[4] {a, b, c, d};
             Vector2[] curve = BezierSpline.CubicCurve(lst);
             // debugk += 3;
-            for (int j = 0; j < curve.Length; j++)
+            for (int j = 0; j < curve.Length-1; j++)
             {
                 spline.Add(curve[j]);
             }
         }
+        spline.Add(controlPoints[controlPoints.Count-1]);
         // Debug.Log(debugk);
 
         return spline;
@@ -111,11 +114,12 @@ public class BezierSpline
         //     Debug.Log(d);
         //     Debug.Log(i);
         // Debug.Log("===");
-            for (int j = 0; j < curve.Length; j++)
+            for (int j = 0; j < curve.Length-1; j++)
             {
                 spline.Add(curve[j]);
             }
         }
+        spline.Add(controlPoints[controlPoints.Count-1]);
         // Debug.Log(Len_C2+1);
 
         return spline;
@@ -131,9 +135,9 @@ public class BezierSpline
             var pieces = SubdivideCubic(curve);
             var x = CubicCurve(pieces[0]);
             var y = CubicCurve(pieces[1]);
-            ret = new Vector2[x.Length + y.Length];
+            ret = new Vector2[x.Length + y.Length-1];
             x.CopyTo(ret, 0);
-            y.CopyTo(ret, x.Length);
+            Array.Copy(y, 1, ret, x.Length, y.Length-1);
         }
         return ret;
     }
@@ -161,7 +165,7 @@ public class BezierSpline
                 };
     }
     public static bool isFlatCubic(Vector2[] curve) {
-        float tol = 10; // anything below 50 is roughly good-looking
+        float tol = 10; // ANCHOR anything below 50 is roughly good-looking
         
         float ax = 3.0f*curve[1][0] - 2.0f*curve[0][0] - curve[3][0]; ax *= ax;
         float ay = 3.0f*curve[1][1] - 2.0f*curve[0][1] - curve[3][1]; ay *= ay;
@@ -182,7 +186,7 @@ public class BezierSpline
         Vector2[] curve = BezierSpline.CubicCurve(lst);
         for (int i = 0; i < curve.Length - 1; i++)
         {
-            prefabLine.GetComponent<RoadSegment>().CreateSimple(0, curve[i], curve[i+1], 0.5f, Color.white);
+            prefabLine.GetComponent<Road>().CreateSimple(0, curve[i], curve[i+1], 0.5f, Color.white);
         }
     }
 

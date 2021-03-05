@@ -37,7 +37,7 @@ public class RoadGenerator : MonoBehaviour
     // // road data
     // List<RegionId> roadRegions = new List<RegionId>();
     // List<Vector2> roadControlPointsFirstPass = new List<Vector2>();
-    // List<RoadSegment> roadSegments;
+    // List<Road> roadSegments;
 
 
     void Awake()
@@ -59,12 +59,12 @@ public class RoadGenerator : MonoBehaviour
         isInitialized = true;
     }
 
-    public void GenerateRoad(World world, Vector2 positionPlayerStart)
+    public Road GenerateRoad(World world, Vector2 positionPlayerStart)
     {
         if (!isInitialized)
         {
             Debug.Log("ERROR: trying to use uninitialized RoadGenerator.");
-            return;
+            return null;
         }
 
         // use a middle point as the player start point
@@ -77,11 +77,12 @@ public class RoadGenerator : MonoBehaviour
         // road data
         List<RegionId> roadRegions = new List<RegionId>();
         List<Vector2> roadControlPointsFirstPass = new List<Vector2>();
-        RoadSegment roadSegments;
+        Road road;
 
         PickRoadTiles(ref roadRegions, ref roadControlPointsFirstPass, regionPlayerStart);
         PerturbControlPoints(ref roadRegions, ref roadControlPointsFirstPass, world);
-        roadSegments = GenerateRoadGameObjects(ref roadRegions, ref roadControlPointsFirstPass, GenerationMode.CUBINC_BEZIER_SPLINE_C2);
+        road = GenerateRoadGameObjects(ref roadRegions, ref roadControlPointsFirstPass, GenerationMode.CUBINC_BEZIER_SPLINE_C2);
+        return road;
     }
 
     private Region[,] GenerateRegions(int numBlocksHorizontal, int numBlocksVectical, float width, float length)
@@ -154,7 +155,7 @@ public class RoadGenerator : MonoBehaviour
         CUBINC_BEZIER_SPLINE_C1,
         CUBINC_BEZIER_SPLINE_C2
     }
-    private RoadSegment GenerateRoadGameObjects(ref List<RegionId> roadRegions, ref List<Vector2> roadControlPointsFirstPass, GenerationMode generationMode, bool visualize=false)
+    private Road GenerateRoadGameObjects(ref List<RegionId> roadRegions, ref List<Vector2> roadControlPointsFirstPass, GenerationMode generationMode, bool visualize=false)
     {
         // float widthSegment = 0.5f;
 
@@ -192,14 +193,14 @@ public class RoadGenerator : MonoBehaviour
         }   
 
         // Draw
-        RoadSegment road;
+        Road road;
         // for (int i = 0; i < spline.Count - 1; i++)
         // {
         //     Color segColor = Color.Lerp(Color.red, Color.white, (i + 1.0f) / (spline.Count - 1));
-        //     RoadSegment roadSeg = prefabSeg.GetComponent<RoadSegment>().Create(0, spline[i], spline[i+1], widthSegment, segColor);
+        //     Road roadSeg = prefabSeg.GetComponent<Road>().Create(0, spline[i], spline[i+1], widthSegment, segColor);
         //     road.Add(roadSeg);
         // }
-        road = prefabSeg.GetComponent<RoadSegment>().CreatePoly(0, spline, widthSegment, Color.red, Color.white);
+        road = prefabSeg.GetComponent<Road>().CreatePoly(0, spline, widthSegment, Color.red, Color.white);
         return road;
 
     }
@@ -281,8 +282,8 @@ public class RoadGenerator : MonoBehaviour
 
             // GameObject roadSeg = Instantiate(prefabSeg, Vector2.zero, Quaternion.identity);
             GameObject roadSeg = Instantiate(prefabSeg, segStart, Quaternion.Euler(0, 0, angleDeg)); // warning: this one adjusts the object axis, hence affect rendering
-            RoadSegment roadSegScript = roadSeg.GetComponent<RoadSegment>();
-            roadSegScript.Initialize(i, segStart, segStep, widthSegment, segColor);
+            Road roadSegScript = roadSeg.GetComponent<Road>();
+            roadSegScript.CreateSimple(i, segStart, segStep, widthSegment, segColor);
             
             segEnd = segStart + segStep;
             segStart = segEnd;

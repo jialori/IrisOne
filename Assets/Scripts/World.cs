@@ -7,7 +7,7 @@ public class World : MonoBehaviour
 {
 
     [Header("References")]
-    public RoadGenerator road;
+    public RoadGenerator roadGenerator;
     public GameObject prefabLine; // world boundary
     public Player player;
 
@@ -34,15 +34,19 @@ public class World : MonoBehaviour
         if (drawWorldBoundaries) DrawWorldBoundaries();
         if (drawWorldRegionLines) DrawWorldRegionLines();
 
-        road.Initialize(this);
-        road.GenerateRoad(this, positionPlayerStart);
+        roadGenerator.Initialize(this);
+        Road road = roadGenerator.GenerateRoad(this, positionPlayerStart);
+        if (road != null)
+        {
+            // generate player in the center
+            player.Initialize(positionPlayerStart, road);
 
-        // generate player in the center
-        player.transform.position = positionPlayerStart;
+            // focus camera on player (implement at the camera)
 
-        // focus camera on player (implement at the camera)
+            // generate monster (call monster data generator)
 
-        // generate monster (call monster data generator
+        }
+
 
 
         // // Tests
@@ -66,20 +70,20 @@ public class World : MonoBehaviour
         Color lineColor = Color.white;
 
         GameObject roadSeg = Instantiate(prefabLine);
-        RoadSegment roadSegScript = roadSeg.GetComponent<RoadSegment>();
-        roadSegScript.Initialize(0, lowerLeftCorner, lowerRightCorner, lineWidth, lineColor);
+        Road roadSegScript = roadSeg.GetComponent<Road>();
+        roadSegScript.CreateSimple(0, lowerLeftCorner, lowerRightCorner, lineWidth, lineColor);
 
         roadSeg = Instantiate(prefabLine);
-        roadSegScript = roadSeg.GetComponent<RoadSegment>();
-        roadSegScript.Initialize(0, upperLeftCorner, upperRightCorner, lineWidth, lineColor);
+        roadSegScript = roadSeg.GetComponent<Road>();
+        roadSegScript.CreateSimple(0, upperLeftCorner, upperRightCorner, lineWidth, lineColor);
 
         roadSeg = Instantiate(prefabLine);
-        roadSegScript = roadSeg.GetComponent<RoadSegment>();
-        roadSegScript.Initialize(0, lowerLeftCorner, upperLeftCorner, lineWidth, lineColor);
+        roadSegScript = roadSeg.GetComponent<Road>();
+        roadSegScript.CreateSimple(0, lowerLeftCorner, upperLeftCorner, lineWidth, lineColor);
 
         roadSeg = Instantiate(prefabLine);
-        roadSegScript = roadSeg.GetComponent<RoadSegment>();
-        roadSegScript.Initialize(0, lowerRightCorner, upperRightCorner, lineWidth, lineColor);
+        roadSegScript = roadSeg.GetComponent<Road>();
+        roadSegScript.CreateSimple(0, lowerRightCorner, upperRightCorner, lineWidth, lineColor);
 
     }
 
@@ -93,24 +97,24 @@ public class World : MonoBehaviour
         float lineWidth = 0.5f;
         Color lineColor = Color.white;
 
-        float width = worldWidth / road.numBlocksHorizontal;
-        float length = worldLength / road.numBlocksVectical;
+        float width = worldWidth / roadGenerator.numBlocksHorizontal;
+        float length = worldLength / roadGenerator.numBlocksVectical;
 
-        for (int i = 1; i < road.numBlocksHorizontal; i++)
+        for (int i = 1; i < roadGenerator.numBlocksHorizontal; i++)
         {
-            for (int j = 1; j < road.numBlocksVectical; j++)
+            for (int j = 1; j < roadGenerator.numBlocksVectical; j++)
             {
                 Vector2 lowerPoint = new Vector2(j * width, 0);
                 Vector2 upperPoint = new Vector2(j * width, worldLength);
                 GameObject roadSegVertical = Instantiate(prefabLine);
-                RoadSegment roadSegScriptVertical = roadSegVertical.GetComponent<RoadSegment>();
-                roadSegScriptVertical.Initialize(0, lowerPoint, upperPoint, lineWidth, lineColor);
+                Road roadSegScriptVertical = roadSegVertical.GetComponent<Road>();
+                roadSegScriptVertical.CreateSimple(0, lowerPoint, upperPoint, lineWidth, lineColor);
             }
             Vector2 leftPoint = new Vector2(0, i * length);
             Vector2 rightPoint = new Vector2(worldWidth, i * length);
             GameObject roadSegHorizontal = Instantiate(prefabLine);
-            RoadSegment roadSegScriptHorizontal = roadSegHorizontal.GetComponent<RoadSegment>();
-            roadSegScriptHorizontal.Initialize(0, leftPoint, rightPoint, lineWidth, lineColor);
+            Road roadSegScriptHorizontal = roadSegHorizontal.GetComponent<Road>();
+            roadSegScriptHorizontal.CreateSimple(0, leftPoint, rightPoint, lineWidth, lineColor);
         }
     }
 

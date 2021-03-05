@@ -28,6 +28,50 @@ I decided that I will focus on the world generation, particularly the road gener
 ## 2021
 
 Week of 2021-03-01
-1. add eye blinking -> state change 
+- F monsters going around the world
+    5 types:
+- F cannot leave road / road tracking design
+    (handled) illed cases
+    -> dead corner (infinite loop)
+    (unhandled) illed cases
+    -> AOB < 90, 
+    -> consecutive repeated points (should be able to handle it in the Player's end; also a result of the end of ) // ANCHOR next version update
+- F better movement feeling (only moves camera when at the edge of the camera view)
+- number design; no-end design. when trapped, can just wait in the snow until it gets better. "it will get better..." "let time heal..."
+    modes of choosing: time-travel mode / real advanture mode (where no fast forward is allowed. slow gaming. (recommends good literature or movies while trapped.) )
+- A trails of walken path left behind
+
+- add eye blinking -> monsters state change (move faster /// later stage: be friendly)
     - Event & Notification system?
-2. 
+
+## // ANCHOR next version
+- more generally applicable data representation for the roads,  upgrade, when the , at the vertices (+ edges) instead of at the edges, undirectional graph;
+    * candidate: uncyclic graph, check the article
+    * also capable of handle all illed cases
+        (handled) illed cases
+        -> dead corner (infinite loop)
+        (unhandled) illed cases
+        -> AOB < 90, 
+        -> consecutive repeated points (should be able to handle it in the Player's end; also a result of the end of ) // ANCHOR next version update
+    <!-- * ~~performance boost~~ -->
+
+
+
+## Goals
+Art game / experience game / symbolic narrative game
+- simple (maybe classic) mechanics that brings some fun
+
+
+Designing or Describing
+- Speedgraphing. (core design value)
+
+
+## Non-goals
+- snow accumulating while the Eye is open for longer. Environmental change and interaction.
+- Stages: I. Realization : realizing the Eye's existance, II. battling with the Eye, III. realizing the Eye cannot die, can always reborns; VI. find more sustainable way to co-exist with it.
+
+
+
+## References
+
+1. https://en.wikipedia.org/wiki/Point_in_polygon
