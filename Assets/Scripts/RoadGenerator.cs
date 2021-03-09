@@ -18,6 +18,7 @@ public class RoadGenerator : MonoBehaviour
     public bool isInitialized;
     public int numBlocksHorizontal = 10;
     public int numBlocksVectical = 10;
+    public GenerationMode generationMode;
 
     // Test params
     [Header("Testing Params")]
@@ -81,7 +82,7 @@ public class RoadGenerator : MonoBehaviour
 
         PickRoadTiles(ref roadRegions, ref roadControlPointsFirstPass, regionPlayerStart);
         PerturbControlPoints(ref roadRegions, ref roadControlPointsFirstPass, world);
-        road = GenerateRoadGameObjects(ref roadRegions, ref roadControlPointsFirstPass, GenerationMode.CUBINC_BEZIER_SPLINE_C2);
+        road = GenerateRoadGameObjects(ref roadRegions, ref roadControlPointsFirstPass, generationMode);
         return road;
     }
 

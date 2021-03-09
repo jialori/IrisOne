@@ -34,6 +34,11 @@ public class Road : MonoBehaviour
         get {return m_points;}
     }
 
+    public int PointsCount
+    {
+        get {return m_points.Count;}
+    }
+
     public Vector2 StartPoint
     {
         get {return m_points[0];}
@@ -125,30 +130,30 @@ public class Road : MonoBehaviour
 
     private void Tests()
     {
-        this.Initialize(0, new Vector2(1, 1), new Vector2(5, 5));
+        this.InitializeOnCreate(0, new Vector2(1, 1), new Vector2(5, 5));
     }
     
-    public  Road CreateSimple(int id, Vector2 startPoint, Vector2 endPoint, int orderInLayer = int.MinValue)
+    public Road CreateSimple(int id, Vector2 startPoint, Vector2 endPoint, int orderInLayer = int.MinValue)
     {
-        GameObject roadSeg = Instantiate(prototypeRoadSeg);
-        Road roadSegScript = roadSeg.GetComponent<Road>();
-        roadSegScript.Initialize(id, startPoint, endPoint, orderInLayer);
-        return roadSegScript;
+        GameObject roadGameObject = Instantiate(prototypeRoadSeg);
+        Road roadScript = roadGameObject.GetComponent<Road>();
+        roadScript.InitializeOnCreate(id, startPoint, endPoint, orderInLayer);
+        return roadScript;
     }
 
-    public  Road CreateSimple(int id, Vector2 startPoint, Vector2 endPoint, float width, Color color, int orderInLayer = int.MinValue)
+    public Road CreateSimple(int id, Vector2 startPoint, Vector2 endPoint, float width, Color color, int orderInLayer = int.MinValue)
     {
-        GameObject roadSeg = Instantiate(prototypeRoadSeg);
-        Road roadSegScript = roadSeg.GetComponent<Road>();
-        roadSegScript.Initialize(id, startPoint, endPoint, orderInLayer);
-        return roadSegScript;
+        GameObject roadGameObject = Instantiate(prototypeRoadSeg);
+        Road roadScript = roadGameObject.GetComponent<Road>();
+        roadScript.InitializeOnCreate(id, startPoint, endPoint, orderInLayer);
+        return roadScript;
     }
     
-    public  Road CreatePoly(int id, List<Vector2> spline, float width, Color startColor, Color endColor)
+    public Road CreatePoly(int id, List<Vector2> spline, float width, Color startColor, Color endColor)
     {
-        GameObject roadSeg = Instantiate(prototypeRoadSeg);
+        GameObject roadGameObject = Instantiate(prototypeRoadSeg);
 
-        LineRenderer lineRenderer = roadSeg.GetComponent<LineRenderer>();
+        LineRenderer lineRenderer = roadGameObject.GetComponent<LineRenderer>();
         lineRenderer.positionCount = spline.Count;
         Vector3[] verts3D = spline.Select(x => (Vector3)x).ToArray();
         lineRenderer.SetPositions(verts3D);
@@ -157,18 +162,18 @@ public class Road : MonoBehaviour
         lineRenderer.startWidth = width;
         lineRenderer.endWidth = width;
 
-        Road roadSegScript = roadSeg.GetComponent<Road>();
-        roadSegScript.Initialize(id, spline);
-        return roadSegScript;
+        Road roadScript = roadGameObject.GetComponent<Road>();
+        roadScript.InitializeOnCreate(id, spline);
+        return roadScript;
     }
 
-    private void Initialize(int id, List<Vector2> spline)
+    private void InitializeOnCreate(int id, List<Vector2> spline)
     {
         this.SetId(id);
         this.m_points = spline;
     }
 
-    private void Initialize(int id, Vector2 startPoint, Vector2 endPoint, int orderInLayer = int.MinValue)
+    private void InitializeOnCreate(int id, Vector2 startPoint, Vector2 endPoint, int orderInLayer = int.MinValue)
     {
         this.SetId(id);
 
@@ -182,9 +187,9 @@ public class Road : MonoBehaviour
         }
     }
 
-    private void Initialize(int id, Vector2 startPoint, Vector2 endPoint, float width, Color color, int orderInLayer = int.MinValue)
+    private void InitializeOnCreate(int id, Vector2 startPoint, Vector2 endPoint, float width, Color color, int orderInLayer = int.MinValue)
     {
-        Initialize(id, startPoint, endPoint, orderInLayer);
+        InitializeOnCreate(id, startPoint, endPoint, orderInLayer);
         Color = color;
         Width = width;
 
@@ -197,6 +202,12 @@ public class Road : MonoBehaviour
     public void SetId(int id)
     {
         Id = id;
+    }
+
+    public Vector2 GetPoint(int index)
+    {
+        if (index < 0 || index > m_points.Count -1) return Vector2.negativeInfinity;
+        return m_points[index];
     }
 
     public NavBlock GetNavBlock(int index)

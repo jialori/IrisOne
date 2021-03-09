@@ -30,7 +30,7 @@ I decided that I will focus on the world generation, particularly the road gener
 Week of 2021-03-01
 - F monsters going around the world
     5 types:
-- F cannot leave road / road tracking design
+- F cannot leave road / road tracking design [x]
     (handled) illed cases
     -> dead corner (infinite loop)
     (unhandled) illed cases
@@ -45,6 +45,7 @@ Week of 2021-03-01
     - Event & Notification system?
 
 ## // ANCHOR next version
+- refactor road code into the Builder pattern, aka. Road Create functions will be put into the RoadGenerator class, and RoadGenerator will have a RoadGenerator interface. In the future can just extend the RoadGenerator interface with different code. NavBlock calc code also into the RoadGenerator class.
 - more generally applicable data representation for the roads,  upgrade, when the , at the vertices (+ edges) instead of at the edges, undirectional graph;
     * candidate: uncyclic graph, check the article
     * also capable of handle all illed cases

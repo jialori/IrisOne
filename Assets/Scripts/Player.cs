@@ -20,11 +20,6 @@ public class Player : MonoBehaviour
     //     get {return m_road.Points[m_navBlockIndexer];}
     // }
 
-    void Start()
-    {
-        
-    }
-
     void Update()
     {
         if (isAlive)
@@ -33,7 +28,9 @@ public class Player : MonoBehaviour
             Vector2 move = moveSpeed * (Input.GetAxis("Vertical") * Vector2.up + Input.GetAxis("Horizontal") * Vector2.right);
             if (move != Vector2.zero)
             {
-                this.transform.position = (Vector3)TryMove(move, this.transform.position);
+                // this.transform.position = (Vector3)TryMove(move, this.transform.position);
+                Vector2 resultMove = TryMove(move, this.transform.position);
+                this.transform.position = this.transform.position + (Vector3) resultMove;
             }
 
         }
@@ -50,10 +47,18 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.CompareTag("monster"))
+        // if (collider.CompareTag("monster"))
+        if (collider.CompareTag("vital"))
         {
             isAlive = false;
+            Die();
         }
+    }
+
+
+    void Die()
+    {
+        gameObject.SetActive(false);
     }
 
     // Returns the result position
@@ -108,8 +113,8 @@ public class Player : MonoBehaviour
                 resultMove = clampedMoveProjU +
                             (Vector2.ClampMagnitude(curProjV + clampedMoveProjV, roadRadius) - curProjV);
 
-                Debug.Log(resultMove.sqrMagnitude);
-                Debug.Log(!Vector2Ext.IsCloseToZero(resultMove));
+                // Debug.Log(resultMove.sqrMagnitude);
+                // Debug.Log(!Vector2Ext.IsCloseToZero(resultMove));
 
                 if (m_navBlockIndexer > 0 && 
                     ( (!isPotentialDeadCorner) || (!Vector2Ext.IsCloseToZero(resultMove)) ) // prevents infinite loop on dead corner
@@ -141,8 +146,8 @@ public class Player : MonoBehaviour
                 resultMove = clampedMoveProjU +
                             Vector2.ClampMagnitude(curProjV + clampedMoveProjV, roadRadius) - curProjV;
 
-                Debug.Log(resultMove.sqrMagnitude);
-                Debug.Log(!Vector2Ext.IsCloseToZero(resultMove));
+                // Debug.Log(resultMove.sqrMagnitude);
+                // Debug.Log(!Vector2Ext.IsCloseToZero(resultMove));
 
                 if (m_navBlockIndexer < m_road.Points.Count - 2 && 
                     ( (!isPotentialDeadCorner) || (!Vector2Ext.IsCloseToZero(resultMove)) ) // prevents infinite loop on dead corner
@@ -156,17 +161,19 @@ public class Player : MonoBehaviour
             }
 
         }
-        Debug.Log(m_navBlockIndexer);
+        // Debug.Log(m_navBlockIndexer);
         
         if (residualMove != Vector2.zero)
         {
         // Debug.Log("hi");
         Debug.Log(resultMove);
-            return TryMove(residualMove, curPosition + resultMove, Vector2Ext.IsCloseToZero(resultMove));
+            return resultMove + TryMove(residualMove, curPosition + resultMove, Vector2Ext.IsCloseToZero(resultMove));
+            // return TryMove(residualMove, curPosition + resultMove, Vector2Ext.IsCloseToZero(resultMove));
         }
         else
         {
-            return curPosition + resultMove;
+            return resultMove;
+            // return curPosition + resultMove;
         }
 
 

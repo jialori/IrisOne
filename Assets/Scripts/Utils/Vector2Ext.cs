@@ -9,12 +9,12 @@ static class Vector2Ext
 
     static public bool IsCloseToZero(Vector2 a)
     {
-        return a.sqrMagnitude < ApproximatelyZeroSqrMagnitude ;
+        return a.sqrMagnitude < ApproximatelyZeroSqrMagnitude;
     }
 
     static public float ApproximatelyZeroSqrMagnitude
     {
-        get {return 1E-10f;}
+        get {return 1.5E-10f;} // magic number
     }
 
     static public void Project(Vector2 a, Vector2 b, out Vector2 projAdjacent, out Vector2 projOpposite)

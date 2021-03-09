@@ -7,12 +7,12 @@ public class FollowPlayer : MonoBehaviour
     public Camera cam;
     public GameObject player;
 
-    public Vector3 zOffset;
+    private float m_zOffset;
 
     void Awake()
     {
-        Vector3 worldPos = cam.ScreenToWorldPoint(new Vector2((float)Screen.width/2f, (float)Screen.height/2f)) + zOffset;
-
+        // Vector3 worldPos = cam.ScreenToWorldPoint(new Vector2((float)Screen.width/2f, (float)Screen.height/2f)) + m_zOffset;
+        m_zOffset = this.transform.position.z;
 
     }
 
@@ -26,7 +26,8 @@ public class FollowPlayer : MonoBehaviour
     void Update()
     {
         // if (IsWithinRange(play))
-        this.transform.position = player.transform.position + zOffset;
+        Vector2 playerPos = player.transform.position;
+        this.transform.position = new Vector3(playerPos.x, playerPos.y, m_zOffset);
 
 
     }

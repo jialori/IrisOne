@@ -8,6 +8,7 @@ public class World : MonoBehaviour
 
     [Header("References")]
     public RoadGenerator roadGenerator;
+    public ClanGenerator clanGenerator;
     public GameObject prefabLine; // world boundary
     public Player player;
 
@@ -16,6 +17,7 @@ public class World : MonoBehaviour
     public float worldWidth = 100;
     public float worldLength = 100;
     public Vector2 positionPlayerStart;
+    public int numClans;
 
     [Header("Visualization")]
     public bool drawWorldBoundaries = false;
@@ -35,9 +37,13 @@ public class World : MonoBehaviour
         if (drawWorldRegionLines) DrawWorldRegionLines();
 
         roadGenerator.Initialize(this);
+        // clanGenerator.Initialize(this);
         Road road = roadGenerator.GenerateRoad(this, positionPlayerStart);
         if (road != null)
         {
+            // List<Clan> clans = clanGenerator.GenerateClans(this, road, numClans);
+
+
             // generate player in the center
             player.Initialize(positionPlayerStart, road);
 
