@@ -13,12 +13,13 @@ public class Player : MonoBehaviour
     private Road m_road;
     private int m_navBlockIndexer; // between 0 and m_road.Count - 2
 
-    // private Vector2 m_roadNavPoint; // 
-    // private bool m_roadNavPointIsVertex;
-    // Vector2 CurRoadPoint
-    // {
-    //     get {return m_road.Points[m_navBlockIndexer];}
-    // }
+    private Animator m_animator;
+
+
+    void Awake()
+    {
+        m_animator = gameObject.GetComponent<Animator>();
+    }
 
     void Update()
     {
@@ -31,6 +32,29 @@ public class Player : MonoBehaviour
                 // this.transform.position = (Vector3)TryMove(move, this.transform.position);
                 Vector2 resultMove = TryMove(move, this.transform.position);
                 this.transform.position = this.transform.position + (Vector3) resultMove;
+                float resultMoveAngle = Vector2.SignedAngle(Vector2.right, move);
+                if (resultMoveAngle < 45 && resultMoveAngle > -45)
+                {
+                    m_animator.SetTrigger("movingRight");
+                }
+                else if (resultMoveAngle < 135 && resultMoveAngle > 0)
+                {
+                    m_animator.SetTrigger("movingUp");
+                }
+                else if (resultMoveAngle > 0 || resultMoveAngle < -135)
+                {
+                    m_animator.SetTrigger("movingLeft");
+                }
+                else
+                {
+                    m_animator.SetTrigger("movingDown");
+                }
+
+                m_animator.SetBool("isMove", true);
+            }
+            else
+            {
+                m_animator.SetBool("isMove", false);
             }
 
         }
@@ -166,7 +190,6 @@ public class Player : MonoBehaviour
         if (residualMove != Vector2.zero)
         {
         // Debug.Log("hi");
-        Debug.Log(resultMove);
             return resultMove + TryMove(residualMove, curPosition + resultMove, Vector2Ext.IsCloseToZero(resultMove));
             // return TryMove(residualMove, curPosition + resultMove, Vector2Ext.IsCloseToZero(resultMove));
         }
