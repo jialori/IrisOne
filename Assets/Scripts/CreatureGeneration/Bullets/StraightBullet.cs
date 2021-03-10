@@ -2,28 +2,54 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StraightBullet : MonoBehaviour
+public enum BulletLifeControlType
 {
-    public float timeLife;
+    ByTime,
+    ByLength
+}
+
+public class StraightBullet : MonoBehaviour, IPoolObject
+{
     public float speedTravel = Mathf.NegativeInfinity;
-    // public float lengthTravel = Single.negativeInfinity;
+    public BulletLifeControlType lifeControlType;
+
+    [DrawIf("lifeControlType", BulletLifeControlType.ByTime)]
+    [SerializeField]
+    private float m_lifeByTime;
+    public float LifeByTime
+    {
+        get {return ( (lifeControlType == BulletLifeControlType.ByTime) ? m_lifeByTime : m_lifeByLengthTravel / speedTravel);}
+        set {m_lifeByTime = value;}
+    }
+    [DrawIf("lifeControlType", BulletLifeControlType.ByLength)]
+    [SerializeField]
+    private float m_lifeByLengthTravel;
+    public float LifeByLengthTravel
+    {
+        get {return ( (lifeControlType == BulletLifeControlType.ByLength) ? m_lifeByLengthTravel : m_lifeByTime * speedTravel);}
+        set {m_lifeByLengthTravel = value;}
+    }
+
     private float m_timer;
     private bool m_isReady = false;
 
-    // Start is called before the first frame update
+    void Awake()
+    {
+        Deactivate();
+    }
+
     void OnEnable()
     {
         m_timer = 0.0f;
         m_isReady = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!m_isReady) return;
         
         m_timer += Time.deltaTime;
-        if (m_timer > timeLife)
+        if (m_timer > LifeByTime)
         {
             m_timer = 0.0f;
             Deactivate();
@@ -34,19 +60,50 @@ public class StraightBullet : MonoBehaviour
         }        
     }
 
-
-    private void Deactivate()
+    // IPoolObject methods
+    public void Reset()
     {
-            gameObject.SetActive(false);
+        m_timer = 0.0f;
+        m_isReady = false;
+
     }
 
-    public void SetIsReady()
+    public void Activate()
     {
+        gameObject.SetActive(true);
         m_isReady = true;
+    }
+
+    public void Deactivate()
+    {
+        gameObject.SetActive(false);
+        m_isReady = false;
+    }
+
+    // IPoolObject related methods for reuse
+
+    public void SetBulletLife(BulletLifeControlType inputType, float val)
+    {
+        if (inputType == BulletLifeControlType.ByTime)
+        {
+            LifeByTime = val;
+        }
+        else
+        {
+            LifeByLengthTravel = val;
+        }
+    }
+
+    public void SetTransform(Vector3 pos, Quaternion rot)
+    {
+        transform.position = pos;
+        transform.rotation = rot;
     }
 
     public void SetSpeed(float speed)
     {
         this.speedTravel = speed;
     }
+
+
 }

@@ -52,7 +52,7 @@ Week of 2021-03-01
         (handled) illed cases
         -> dead corner (infinite loop)
         (unhandled) illed cases
-        -> AOB < 90, 
+        -> AOB < 90,
         -> consecutive repeated points (should be able to handle it in the Player's end; also a result of the end of ) // ANCHOR next version update
     <!-- * ~~performance boost~~ -->
 

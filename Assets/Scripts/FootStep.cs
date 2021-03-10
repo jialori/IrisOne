@@ -15,6 +15,7 @@ public class FootStep : MonoBehaviour, IPoolObject
     void Awake()
     {
         m_renderer = this.GetComponent<SpriteRenderer>();
+        Deactivate();
     }
 
     void Update()

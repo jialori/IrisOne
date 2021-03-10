@@ -46,10 +46,8 @@ public class HasFootsteps : MonoBehaviour
             m_pool.Add(footstepScript);
         }
         OnGameStart();
-        Debug.Log(m_pool.Count);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (m_footstepsSpacingSqr == 0) return;

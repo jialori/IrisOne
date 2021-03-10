@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
         if (isAlive)
         {
             // Movement
-            Vector2 move = moveSpeed * (Input.GetAxis("Vertical") * Vector2.up + Input.GetAxis("Horizontal") * Vector2.right);
+            Vector2 move = moveSpeed * GetInputMove();
             if (move != Vector2.zero)
             {
                 // this.transform.position = (Vector3)TryMove(move, this.transform.position);
@@ -80,7 +80,16 @@ public class Player : MonoBehaviour
     }
 
 
-    void Die()
+    private Vector2 GetInputMove()
+    {
+        if (GameState.gameControlState == GameControlState.InteractWithGame)
+        {
+            return Input.GetAxis("Vertical") * Vector2.up + Input.GetAxis("Horizontal") * Vector2.right;
+        }
+        return Vector2.zero;
+    }
+
+    private void Die()
     {
         gameObject.SetActive(false);
     }
