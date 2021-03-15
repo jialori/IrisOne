@@ -15,12 +15,13 @@ public class DialogueText : MonoBehaviour
     private Func<bool> GetScreenTap = () => Input.GetButtonDown("Submit");
 
 
-    public void PlayDialogue()
+    public IEnumerator PlayDialogue()
     {
         if (dialogueTextAsset && textBox)
         {
-            StartCoroutine("PlayDialogueCoroutine");
+            yield return StartCoroutine("PlayDialogueCoroutine");
         }
+        yield return null;
     }
 
     public void ExitDialogue()
@@ -32,7 +33,7 @@ public class DialogueText : MonoBehaviour
     {
         gameObject.SetActive(true);
         
-        GameState.gameControlState = GameControlState.InteractWithUI;
+        // GameState.gameControlState = GameControlState.InteractWithUI;
         string text = dialogueTextAsset.text;
         string[] lines = text.Split('\n');
         ShowDialogueLine(lines[0]);
@@ -55,7 +56,7 @@ public class DialogueText : MonoBehaviour
         }
         gameObject.SetActive(false);
 
-        GameState.gameControlState = GameControlState.InteractWithGame;
+        // GameState.gameControlState = GameControlState.InteractWithGame;
     }
 
 

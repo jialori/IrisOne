@@ -37,11 +37,13 @@ public class World : MonoBehaviour
         if (drawWorldRegionLines) DrawWorldRegionLines();
 
         roadGenerator.Initialize(this);
-        // clanGenerator.Initialize(this);
         Road road = roadGenerator.GenerateRoad(this, positionPlayerStart);
         if (road != null)
         {
-            // List<Clan> clans = clanGenerator.GenerateClans(this, road, numClans);
+            clanGenerator.Initialize(this);
+            List<Clan> clans = clanGenerator.GenerateClans(this, road, numClans);
+
+
 
 
             // generate player in the center

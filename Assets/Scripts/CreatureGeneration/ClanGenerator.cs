@@ -8,6 +8,8 @@ public class ClanGenerator : MonoBehaviour
     public GameObject prototypeClan;
     // private ClanBuilder m_clanBuilder = new RabbitClanBuilder(); // extended to a list in the future
 
+    public GameObject testCreature;
+
     void Start()
     {
         
@@ -39,9 +41,11 @@ public class ClanGenerator : MonoBehaviour
         }
 
         List<Clan> clans = new List<Clan>();
+        RabbitBuilder testRabbitBuilder = new RabbitBuilder();
         foreach (int genPointIdx in genPointIdxs)
         {
             Vector2 genPoint = road.Points[genPointIdx];
+            testRabbitBuilder.Build(genPoint, testCreature);
             // Clan clan = m_clanBuilder.Build(genPoint);
             // Clan clan = CreateSimple(genPoint);
         }
@@ -74,7 +78,7 @@ enum ClanSize
 public interface ClanBuilder
 {
     Clan Build(Vector2 createPoint);
-    List<Creature> BuildClanCreatures(Vector2 createPoint);
+    // List<Creature> BuildClanCreatures(Vector2 createPoint);
     // List<Creature> BuildClanEnvironment(World world, Road road, int size);
 }
 
